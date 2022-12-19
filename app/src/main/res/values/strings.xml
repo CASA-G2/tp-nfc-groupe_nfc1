@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MBDS Tag</string>
+    <string name="nfc_write_ndef">Write NFC NDEF Tag</string>
+    <string name="nfc_read_tag">Read NFC Tag</string>
+    <string name="write_tag">Posez un tag sur le téléphone et gardez le jusqu\'à la confirmation d\'écriture</string>
+    <string name="read_tag">Posez un tag sur le téléphone et gardez le jusqu\'à la confirmation de lecture</string>
+</resources>
