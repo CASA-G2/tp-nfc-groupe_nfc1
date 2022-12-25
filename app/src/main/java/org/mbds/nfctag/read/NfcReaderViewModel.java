@@ -1,5 +1,6 @@
 package org.mbds.nfctag.read;
 
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.os.Parcelable;
@@ -35,36 +36,35 @@ public class NfcReaderViewModel extends ViewModel {
     private TagType getTypeFromNdefRecord(NdefRecord ndefRecord) {
         //check NDEF record TNF:
         //======================
-        switch (ndefRecord.getTnf()) {
-            case NdefRecord.TNF_ABSOLUTE_URI:
-                break;
-            case NdefRecord.TNF_EXTERNAL_TYPE:
-                // manage NDEF record as an URN (<domain_name>:<service_name>)
-                break;
-            case NdefRecord.TNF_MIME_MEDIA:
-                // manage NDEF record as the MIME type is:
-                // picture, video, sound, JSON, etc…
-                break;
-            case NdefRecord.TNF_WELL_KNOWN:
-                // manage NDEF record as the type is:
-                // contact (business card), phone number, email…
-                break;
-            default:
-                // manage NDEF record as text…
-        }
 
+        if (ndefRecord.toUri() != null) {
+            Uri uri = ndefRecord.toUri();
+            switch (uri.getScheme()) {
+                case "tel":
+                    return TagType.PHONE;
+                case "http":
+                case "https":
+                    return TagType.URL;
+            }
+        }
         return TagType.TEXT;
+
+
     }
 
     private String getNdefContent(NdefRecord ndefRecord) throws UnsupportedEncodingException {
 
         //parse NDEF record as String:
         //============================
-        byte[] payload = ndefRecord.getPayload();
-        String encoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTf-8";
-        int languageSize = payload[0] & 0063;
-        return new String(payload, languageSize + 1,
-                payload.length - languageSize - 1, encoding);
+        if (ndefRecord.toUri() != null) {
+            return ndefRecord.toUri().toString();
+        } else {
+            byte[] payload = ndefRecord.getPayload();
+            String encoding = ((payload[0] & 128) == 0) ? "UTF-8" : "UTf-8";
+            int languageSize = payload[0] & 0063;
+            return new String(payload, languageSize + 1,
+                    payload.length - languageSize - 1, encoding);
+        }
     }
 
     public void processNfcTag(Parcelable[] rawMsgs) {
@@ -81,12 +81,12 @@ public class NfcReaderViewModel extends ViewModel {
                     NdefRecord ndefRecord = ndefMessage[i].getRecords()[j];
                     try {
                         tagContents.add(new TagContent(getNdefContent(ndefRecord), getTypeFromNdefRecord(ndefRecord)));
+                        onTagRead.setValue(tagContents);
                     } catch (UnsupportedEncodingException e) {
                         onReadFailed.setValue(e);
                     }
                 }
             }
-            onTagRead.setValue(tagContents);
         } else {
             onReadFailed.setValue(new Exception("No NDEF message found!"));
         }

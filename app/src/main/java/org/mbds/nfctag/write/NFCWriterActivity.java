@@ -118,7 +118,7 @@ public class NFCWriterActivity extends AppCompatActivity {
                 || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             // get the tag object from the received intent
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            viewModel.writeTag("www.google.com", tag, TagType.URL);
+            viewModel.writeTag("0651696043", tag, TagType.PHONE);
         } else {
             // TODO Indiquer à l'utilisateur que ce type de tag n'est pas supporté
         }

@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         handleActions();
     }
 
+
     private void handleActions() {
         binding.btnReadTag.setOnClickListener(new View.OnClickListener() {
             @Override

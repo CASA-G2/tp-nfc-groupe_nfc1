@@ -35,13 +35,13 @@ public class NfcTagViewModel extends ViewModel {
     }
     private NdefMessage createNdefForPhone(String text) {
         NdefRecord[] records = new NdefRecord[1];
-        records[0] = NdefRecord.createUri("tel:");
+        records[0] = NdefRecord.createUri("tel://"+ text);
         return new NdefMessage(records);
 
     }
     private NdefMessage createNdefForUrl(String text) {
         NdefRecord[] records = new NdefRecord[1];
-        records[0] = NdefRecord.createUri("http:");
+        records[0] = NdefRecord.createUri("http://"+ text);
         return new NdefMessage(records);
 
     }

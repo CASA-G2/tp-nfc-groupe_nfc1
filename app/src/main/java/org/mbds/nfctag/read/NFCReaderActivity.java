@@ -90,9 +90,8 @@ public class NFCReaderActivity extends AppCompatActivity {
                 // TODO Si c'est un numéro de téléphone, lancer un appel
 
                 if (s.getType() == TagType.PHONE) {
-                    Intent intent = new Intent(Intent.ACTION_CALL);
-                    intent.setData(Uri.parse(s.getContent()));
-                    startActivity(intent);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(s.getContent()));
+                    startActivity(browserIntent);
                 }
                 // TODO Si c'est une page web lancer un navigateur pour afficher la page
                 else if (s.getType() == TagType.URL) {
