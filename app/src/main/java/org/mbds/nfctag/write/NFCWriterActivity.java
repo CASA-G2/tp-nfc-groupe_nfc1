@@ -2,6 +2,7 @@ package org.mbds.nfctag.write;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -39,6 +40,15 @@ public class NFCWriterActivity extends AppCompatActivity {
 
         //Get default NfcAdapter and PendingIntent instances
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        PackageManager manager = getPackageManager();
+        if (nfcAdapter != null && !nfcAdapter.isEnabled()) {
+
+// Demander à l’utilisateur d’activer le NFC
+
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+            finish();
+        }
         // check NFC feature:
         if (nfcAdapter == null) {
             // process error device not NFC-capable…
@@ -108,7 +118,7 @@ public class NFCWriterActivity extends AppCompatActivity {
                 || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             // get the tag object from the received intent
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            viewModel.writeTag("hello MBDS", tag, TagType.TEXT);
+            viewModel.writeTag("www.google.com", tag, TagType.URL);
         } else {
             // TODO Indiquer à l'utilisateur que ce type de tag n'est pas supporté
         }

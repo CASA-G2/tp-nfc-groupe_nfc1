@@ -33,16 +33,28 @@ public class NfcTagViewModel extends ViewModel {
         records[0] = NdefRecord.createTextRecord("en", text);
         return new NdefMessage(records);
     }
+    private NdefMessage createNdefForPhone(String text) {
+        NdefRecord[] records = new NdefRecord[1];
+        records[0] = NdefRecord.createUri("tel:");
+        return new NdefMessage(records);
+
+    }
+    private NdefMessage createNdefForUrl(String text) {
+        NdefRecord[] records = new NdefRecord[1];
+        records[0] = NdefRecord.createUri("http:");
+        return new NdefMessage(records);
+
+    }
     private NdefMessage createNdefMessage(String text, TagType tagType) {
         switch (tagType) {
             case TEXT:
                 return createNdefForText(text);
             case URL:
                 //TODO create NdefMessage for URL
-                //return createNdefForUrl(text);
+                return createNdefForUrl(text);
             case PHONE:
                 //TODO create NdefMessage for PHONE
-                //return createNdefForPhone(text);
+                return createNdefForPhone(text);
             default:
                 return null;
         }

@@ -2,6 +2,8 @@ package org.mbds.nfctag.read;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.mbds.nfctag.R;
 import org.mbds.nfctag.model.TagContent;
+import org.mbds.nfctag.model.TagType;
 import org.mbds.nfctag.utils.Animation;
 
 public class NFCReaderActivity extends AppCompatActivity {
@@ -40,9 +43,20 @@ public class NFCReaderActivity extends AppCompatActivity {
 
         //Get default NfcAdapter and PendingIntent instances
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        PackageManager manager = getPackageManager();
+        if (nfcAdapter != null && !nfcAdapter.isEnabled()) {
+
+            // Demander à l’utilisateur d’activer le NFC
+
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+            finish();
+        }
+
         // check NFC feature:
         if (nfcAdapter == null) {
             // TODO Afficher un message d'erreur si le téléphone n'est pas compatible NFC
+
             finish();
         }
         pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).
@@ -72,10 +86,24 @@ public class NFCReaderActivity extends AppCompatActivity {
         nfcReaderViewModel.getTagRead().observe(this, readSuccess -> {
             for (TagContent s : readSuccess) {
                 //TODO Réaliser les actions en fonction du contenu du tag
+
                 // TODO Si c'est un numéro de téléphone, lancer un appel
+
+                if (s.getType() == TagType.PHONE) {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse(s.getContent()));
+                    startActivity(intent);
+                }
                 // TODO Si c'est une page web lancer un navigateur pour afficher la page
+                else if (s.getType() == TagType.URL) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(s.getContent()));
+                    startActivity(browserIntent);
+                }
+
                 // TODO Sinon afficher le contenu dans la textview
-                Toast.makeText(this, s.getContent(), Toast.LENGTH_SHORT).show();
+                else {
+                    Toast.makeText(this, s.getContent(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

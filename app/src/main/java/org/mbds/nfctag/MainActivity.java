@@ -1,8 +1,11 @@
 package org.mbds.nfctag;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,14 +33,41 @@ public class MainActivity extends AppCompatActivity {
         binding.btnReadTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NFCReaderActivity.class));
+                PackageManager manager = getPackageManager();
+                if (!manager.hasSystemFeature(PackageManager.FEATURE_NFC)) {
+                    // Avertir l’utilisateur
+                    Context context = getApplicationContext();
+                    CharSequence text = "Erreur don't have NFC";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    finish();
+                } else {
+
+                    startActivity(new Intent(MainActivity.this, NFCReaderActivity.class));
+                }
             }
+
+
         });
 
         binding.btnWriteTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NFCWriterActivity.class));
+                PackageManager manager = getPackageManager();
+                if
+                (!manager.hasSystemFeature(PackageManager.FEATURE_NFC)) {
+                    // Avertir l’utilisateur
+                    Context context = getApplicationContext();
+                    CharSequence text = "Erreur don't have NFC";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else {
+                    startActivity(new Intent(MainActivity.this, NFCWriterActivity.class));
+                }
             }
         });
     }
