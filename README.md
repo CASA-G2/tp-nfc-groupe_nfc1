@@ -22,3 +22,13 @@ L'objectif est de vous familiariser avec les API Android pour la lecture et l'é
 - Lire les commentaires TODO dans le code
 - Implémenter les actions identiées par les commentaires TODO
 
+les membres du groupe 5 :
+chaymae messaoudi
+mohamed amine talib
+hamza talib
+zakaria lachkar
+atlas yassine
+gloirezhaid mabiala
+hilali oussama
+
+
